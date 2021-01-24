@@ -2,7 +2,7 @@ import numpy as np
 
 class neuralNetwork:
 
-    def __init__(self, inputnodes, hiddennodes, outputnodes, learningrate):
+    def __init__(self, inputnodes, outputnodes, hiddennodes=100, learningrate=0.1, activation_function='sigmoid'):
         
         # set number of nodes in each input, hidden, output layer
         self.inodes = inputnodes
@@ -17,16 +17,41 @@ class neuralNetwork:
         # set learning rate
         self.lr = learningrate
 
-        # set sigmoid function as activation function
-        self.activation_function = lambda x: 1 / (1 + np.exp(-x))
-        self.activation_derivative = lambda x: self.activation_function(x)*(1.0 - self.activation_function(x))
+        # set activation function and its derivative
+        self.activation_function = self.get_activation_function(activation_function)
+        self.activation_derivative = self.get_activation_derivative(activation_function)
+    
+    
+    def get_activation_function(self, activation_function):
+        """
+        Docstring
+        """
+        if activation_function == 'sigmoid':
+            # return sigmoid function 
+            return lambda x: 1 / (1 + np.exp(-x))
+
+        elif activation_function == 'tanh':
+            # return hyperbolic tangent (tanh) 
+            return lambda x: (np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))
+
+
+    def get_activation_derivative(self, activation_function):
+        """
+        Docstring
+        """
+        if activation_function == 'sigmoid':
+            # return derivative of sigmoid function 
+            return lambda x: self.activation_function(x)*(1.0 - self.activation_function(x))
+
+        elif activation_function == 'tanh':
+            # set hyperbolic tangent (tanh) as activation function
+            return lambda x: 1 - (self.activation_function(x))**2
 
 
     def forward(self, inputs):
         """
         Takes the input to the neural network and returns the network's output
         """
-
         # calculate signals into hidden layer
         hidden_inputs = np.dot(self.wih, inputs)
         # calculate the signals emerging from hidden layer
@@ -47,7 +72,6 @@ class neuralNetwork:
         comparing this output with the desired output
         and using the difference to guide the updating of the weights
         """
-        
         # get hidden and final outputs
         final_outputs, final_inputs, hidden_outputs, hidden_inputs = self.forward(inputs)
         

@@ -1,5 +1,5 @@
 import numpy as np
-import pickle, csv
+import pickle, csv, time
 from sklearn.metrics import accuracy_score
 from neural_network import neuralNetwork
 
@@ -13,7 +13,7 @@ def main():
     val_inputs_list = pickle.load(open('./data/conll2002/validation_inputs.txt', 'rb'))
     val_targets_list = pickle.load(open('./data/conll2002/validation_targets.txt', 'rb'))
 
-    # Random initialize network 5 times for all different hyperparameter combinations
+    # Random initialize network for all different hyperparameter combinations
     # Train each initialized network on the training data
     # Get the results of the validation data and save the accuracy scores to a csv
 
@@ -21,20 +21,27 @@ def main():
     output_nodes = 12
 
     learning_rate_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    epochs_list = [1, 2, 3, 4, 5, 6, 7, 10]
-    hidden_nodes_list = [100, 150, 200, 250, 300, 350]
+    epochs_list = [1, 2, 3, 4, 5, 6, 7]
+    hidden_nodes_list = [50, 100, 150, 200, 250, 300, 350]
 
     results = []
 
-    for i in range(5):
+    for i in range(1):
         for epochs in epochs_list:
             for learning_rate in learning_rate_list:
                 for hidden_nodes in hidden_nodes_list:
+                    result = {'epochs': epochs, 'learning_rate': learning_rate, 'hidden_nodes': hidden_nodes}
+                    
                     # create instance of neural network
-                    n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+                    n = neuralNetwork(input_nodes, output_nodes, hidden_nodes, learning_rate)
 
                     # train the neural network
+                    start = time.perf_counter()
                     n.train(train_inputs_list, train_targets_output_list, epochs)
+                    stop = time.perf_counter()
+
+                    # add training time to result
+                    result['time'] = stop - start
 
                     # query predictions for the validation data
                     predictions = []
@@ -45,8 +52,7 @@ def main():
                         predictions.append(np.argmax(output))
 
                     # add parameter settings with accuracy score to results
-                    accuracy = accuracy_score(val_targets_list, predictions)
-                    result = {'epochs': epochs, 'learning_rate': learning_rate, 'hidden_nodes': hidden_nodes, 'accuracy': accuracy}
+                    result['accuracy'] = accuracy_score(val_targets_list, predictions)
                     results.append(result)
                     print(result)
 

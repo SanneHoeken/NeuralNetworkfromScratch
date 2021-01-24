@@ -41,7 +41,7 @@ def main():
     learning_rate = 0.1
 
     # create instance of neural network
-    n = neuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+    n = neuralNetwork(input_nodes, output_nodes, hidden_nodes, learning_rate)
 
     # set number of times the training data is used for training
     epochs = 5
