@@ -1,8 +1,12 @@
 import numpy as np
 
 class neuralNetwork:
+    """
+    The neuralNetwork class that initializes a simple one-layer neural netwerk
+    with specified number of input, hidden and output nodes, learning rate and activation function
+    """
 
-    def __init__(self, inputnodes, outputnodes, hiddennodes=100, learningrate=0.1, activation_function='sigmoid'):
+    def __init__(self, inputnodes, outputnodes, hiddennodes, learningrate, activation_function):
         
         # set number of nodes in each input, hidden, output layer
         self.inodes = inputnodes
@@ -24,7 +28,7 @@ class neuralNetwork:
     
     def get_activation_function(self, activation_function):
         """
-        Docstring
+        Returns the sigmoid or hyperbolic tangent function as activation function
         """
         if activation_function == 'sigmoid':
             # return sigmoid function 
@@ -37,7 +41,7 @@ class neuralNetwork:
 
     def get_activation_derivative(self, activation_function):
         """
-        Docstring
+        Returns the derivative of the sigmoid or hyperbolic tangent function
         """
         if activation_function == 'sigmoid':
             # return derivative of sigmoid function 
@@ -88,7 +92,9 @@ class neuralNetwork:
     
     def train(self, inputs_list, targets_list, epochs):
         """
-        docstring
+        Iteratively updates the network's weights for every pair
+        of observation (from input_list) and target label (from target_list),
+        and repeats this a specified number of epochs times.
         """
         for e in range(epochs):
             # iterate over all inputs and targets

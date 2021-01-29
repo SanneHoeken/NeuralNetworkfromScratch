@@ -5,7 +5,10 @@ from neural_network import neuralNetwork
 
 def preprocess_mnist_data(filepath, output_nodes):
     """
-    Docstring
+    Reads the csv file containing the MNIST data
+    Returns a list with scales input vectors, a list with
+    target labels, and list with these target labels converted
+    to output values that correspond to the specified number of output nodes
     """
     # load the mnist training data csv file into a dataframe
     data = pd.read_csv(filepath, header=None)
@@ -41,7 +44,7 @@ def main():
     learning_rate = 0.1
 
     # create instance of neural network
-    n = neuralNetwork(input_nodes, output_nodes, hidden_nodes, learning_rate)
+    n = neuralNetwork(input_nodes, output_nodes, hidden_nodes, learning_rate, 'sigmoid')
 
     # set number of times the training data is used for training
     epochs = 5
